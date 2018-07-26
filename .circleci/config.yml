@@ -2,14 +2,16 @@ version: 2
 jobs:
   build:
     machine:
-
        environment:
-       image: debian:stretch
+       image: circleci/classic:latest
     steps:
       - checkout
       - run:
-          name: Greeting
-          command: echo Hello, world.
+          command: ./.circleci/setup.sh
       - run:
-          name: Print the Current Time
-          command: date
+          command: ./.circleci/edit.sh
+      - run:
+          command: ls -al
+      - run:
+          name: Creating aws instance
+          command: sudo aws ec2 run-instances   --image-id ami-188fba77 --key-name testkey --security-groups test-sg --instance-type t2.micro --placement AvailabilityZone=ap-south-1a --block-device-mappings DeviceName=/dev/sdh,Ebs={VolumeSize=100} --count 1
